@@ -1,21 +1,59 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "protein-motor-sim"
-version = "0.1.1"
-description = "Simulación modular de motores proteicos y sus ciclos mecanoc químicos"
+version = "0.1.2"
+description = "Modular stochastic simulation tools for molecular protein motors"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
-authors = [{name = "ProteinMotorSim contributors"}]
-dependencies = ["numpy>=1.24"]
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "ProteinMotorSim contributors" },
+]
+keywords = [
+    "protein motors",
+    "molecular motors",
+    "kinesin",
+    "stochastic simulation",
+    "Gillespie algorithm",
+    "biophysics",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.24",
+]
 
 [project.optional-dependencies]
-viz = ["matplotlib>=3.7"]
-science = ["scipy>=1.10"]
-dev = ["pytest>=7.4", "ruff>=0.4", "build>=1.0"]
+viz = [
+    "matplotlib>=3.7",
+]
+notebooks = [
+    "matplotlib>=3.7",
+    "jupyterlab>=4.0",
+    "ipykernel>=6.0",
+]
+science = [
+    "scipy>=1.10",
+]
+dev = [
+    "pytest>=7.4",
+    "ruff>=0.4",
+    "build>=1.2",
+    "twine>=5.0",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

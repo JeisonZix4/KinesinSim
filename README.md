@@ -32,6 +32,8 @@ El objetivo del proyecto es proporcionar una arquitectura extensible para estudi
 12. [Hoja de ruta](#12-hoja-de-ruta)
 13. [Contribuir al proyecto](#13-contribuir-al-proyecto)
 14. [Licencia](#14-licencia)
+15. [Docker](#15-docker)
+16. [Publicación e instalación desde PyPI](#16-publicación-e-instalación-desde-pypi)
 
 ---
 
@@ -41,7 +43,7 @@ El objetivo del proyecto es proporcionar una arquitectura extensible para estudi
 
 - Nombre del proyecto para instalación: `protein-motor-sim`.
 - Nombre del paquete para importación en Python: `protein_motor_sim`.
-- Versión indicada en `pyproject.toml`: `0.1.1`.
+- Versión indicada en `pyproject.toml`: `0.1.2`.
 - Requiere Python 3.10 o superior.
 
 
@@ -237,31 +239,96 @@ La arquitectura utiliza clases y contratos comunes. `Motor` define una interfaz 
 
 ## 4. Instalación
 
+ProteinMotorSim puede utilizarse de tres formas:
+
+1. **Desde PyPI:** instala la librería en un entorno Python. Es la opción recomendada para utilizar la API desde tus propios programas.
+2. **Desde Docker Hub:** ejecuta un contenedor que incluye ProteinMotorSim y JupyterLab, sin instalar las dependencias científicas en el equipo anfitrión.
+3. **Desde el código fuente:** clona o descarga el repositorio. Esta opción es la adecuada para desarrollar, modificar el código o ejecutar las pruebas.
+
 ### Requisitos
 
-- Python 3.10 o superior.
-- `pip`.
+- Python 3.10 o superior para la instalación Python o desde el código fuente.
+- Docker Engine para utilizar la imagen de contenedor.
 - Git (recomendado para desarrollo).
-- Matplotlib para gráficas y animaciones.
-- JupyterLab e IPykernel para trabajar con los notebooks.
-- FFmpeg para exportar animaciones MP4.
+- FFmpeg, opcional, para exportar animaciones MP4.
 
-### Clonar el repositorio
+### 4.1. Instalar desde PyPI
 
-Cuando el proyecto esté alojado en un repositorio Git, se podrá clonar con:
+Cuando la versión esté publicada en PyPI, instala la distribución con `pip`:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install "protein-motor-sim==0.1.2"
+```
+
+La instalación básica incluye las dependencias del núcleo. Para instalar también las herramientas de visualización y los notebooks de JupyterLab, utiliza el extra `notebooks`:
+
+```bash
+python -m pip install "protein-motor-sim[notebooks]==0.1.2"
+```
+
+Otros extras disponibles:
+
+```bash
+# Solo herramientas de visualización (Matplotlib)
+python -m pip install "protein-motor-sim[viz]==0.1.2"
+
+# Herramientas científicas adicionales (SciPy)
+python -m pip install "protein-motor-sim[science]==0.1.2"
+
+# Pruebas, formato y herramientas de construcción/publicación
+python -m pip install "protein-motor-sim[dev]==0.1.2"
+```
+
+Los extras se pueden combinar:
+
+```bash
+python -m pip install "protein-motor-sim[dev,notebooks]==0.1.2"
+```
+
+Si se publica una versión posterior, sustituye `0.1.2` por la versión correspondiente. La disponibilidad de una versión depende de que haya sido publicada en el índice de PyPI.
+
+### 4.2. Ejecutar desde Docker Hub
+
+Cuando la imagen se encuentre publicada en Docker Hub, puedes descargarla y ejecutarla sin crear un entorno Python local.
+
+```bash
+# Sustituye el valor por tu usuario u organización de Docker Hub.
+DOCKERHUB_USER="tu_usuario"
+
+sudo docker pull "$DOCKERHUB_USER/protein-motor-sim:0.1.2"
+
+sudo docker run --rm -it \
+    -p 8888:8888 \
+    "$DOCKERHUB_USER/protein-motor-sim:0.1.2"
+```
+
+Abre `http://localhost:8888` en el navegador. JupyterLab conserva la autenticación por token; copia la URL con token que aparece en la salida del contenedor. Para detenerlo, pulsa `Ctrl+C` en la terminal.
+
+Para conservar los cambios de notebooks y los resultados en el equipo anfitrión, ejecuta el contenedor desde la raíz de una copia local del proyecto y monta las carpetas:
+
+```bash
+mkdir -p results
+
+sudo docker run --rm -it \
+    -p 8888:8888 \
+    --mount type=bind,source="$(pwd)/notebooks",target=/workspace/notebooks \
+    --mount type=bind,source="$(pwd)/results",target=/workspace/results \
+    "$DOCKERHUB_USER/protein-motor-sim:0.1.2"
+```
+
+La carpeta `notebooks/` debe existir en el directorio actual. Los cambios realizados en esa carpeta y los archivos guardados en `results/` permanecerán en el anfitrión después de detener el contenedor.
+
+### 4.3. Instalar desde el código fuente
+
+Clona el repositorio o descarga el archivo ZIP de una versión y entra en su directorio raíz:
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 cd ProteinMotorSim
 ```
 
-Si ya tienes la carpeta del proyecto, entra directamente en ella:
-
-```bash
-cd ProteinMotorSim
-```
-
-### Crear y activar el entorno virtual
+Crea y activa un entorno virtual.
 
 En Ubuntu/Linux:
 
@@ -277,31 +344,45 @@ py -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-### Instalar la librería
-
-Para instalar el paquete en modo editable con herramientas de desarrollo y visualización:
+Actualiza `pip` e instala el paquete en modo editable con las dependencias de desarrollo y los notebooks:
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -e ".[dev,viz]"
+python -m pip install -e ".[dev,notebooks]"
 ```
 
 El modo editable permite modificar los archivos de `src/protein_motor_sim/` y utilizar esos cambios sin reinstalar el paquete después de cada edición.
 
-### Extras disponibles
+### 4.4. Instalar mediante archivos de requisitos
 
-| Extra | Dependencias | Uso |
-|---|---|---|
-| `viz` | Matplotlib | Gráficas, esquemas y animaciones. |
-| `science` | SciPy | Herramientas científicas adicionales para futuras extensiones; no es requisito del núcleo actual. |
-| `dev` | Pytest, Ruff, Build | Pruebas, estilo y construcción de distribuciones. |
-
-### Instalar JupyterLab
-
-JupyterLab no forma parte de los extras definidos en `pyproject.toml`; se instala por separado:
+En la raíz del proyecto, `requirements.txt` instala el paquete en modo editable con el extra `notebooks`:
 
 ```bash
-python -m pip install jupyterlab ipykernel
+python -m pip install -r requirements.txt
+```
+
+Para instalar también las herramientas de desarrollo, pruebas y empaquetado:
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+
+`requirements-dev.txt` incluye `requirements.txt`; no es necesario instalar ambos archivos por separado.
+
+### Extras disponibles
+
+| Extra | Dependencias principales | Uso |
+|---|---|---|
+| `viz` | Matplotlib | Gráficas, esquemas y animaciones. |
+| `notebooks` | Matplotlib, JupyterLab e IPykernel | Entorno interactivo para los seis notebooks. |
+| `science` | SciPy | Herramientas científicas adicionales; no es requisito del núcleo actual. |
+| `dev` | Pytest, Ruff, Build y Twine | Pruebas, estilo y construcción/publicación de distribuciones. |
+
+### Registrar y abrir JupyterLab
+
+Después de instalar el extra `notebooks`, registra el entorno como kernel:
+
+```bash
 python -m ipykernel install --user \
     --name proteinmotorsim \
     --display-name "Python (ProteinMotorSim)"
@@ -317,13 +398,13 @@ En cada notebook selecciona el kernel **Python (ProteinMotorSim)**.
 
 ### Exportar animaciones
 
-Para GIF se utiliza el escritor Pillow de Matplotlib. Si Pillow no está disponible:
+Para exportar GIF se utiliza el escritor Pillow de Matplotlib. Si Pillow no está disponible:
 
 ```bash
 python -m pip install pillow
 ```
 
-Para MP4 instala FFmpeg en Ubuntu:
+Para exportar MP4, instala FFmpeg en Ubuntu:
 
 ```bash
 sudo apt install ffmpeg
@@ -443,49 +524,49 @@ Este paisaje es fenomenológico e independiente de la red de Gillespie. No se de
 
 El motor se representa como una red dirigida:
 
-\[
+$$
 S_i \xrightarrow{k_{ij}} S_j,
-\]
+$$
 
-donde `State` representa una configuración efectiva y `Transition` representa un evento que conecta dos estados. La tasa \(k_{ij}\) tiene unidades de \(s^{-1}\) y puede depender del ambiente.
+donde `State` representa una configuración efectiva y `Transition` representa un evento que conecta dos estados. La tasa $k_{ij}$ tiene unidades de $s^{-1}$ y puede depender del ambiente.
 
 ### 6.2. Asociación de ATP
 
 La ley de asociación actual es pseudo-primer orden:
 
-\[
+$$
 a_{ATP}=k_{on}[ATP],
-\]
+$$
 
-donde \(k_{on}\) se expresa en \(M^{-1}s^{-1}\) y \([ATP]\) en \(M\). Por tanto, la tasa efectiva se expresa en \(s^{-1}\).
+donde $k_{on}$ se expresa en $M^{-1}s^{-1}$ y $[ATP]$ en $M$. Por tanto, la tasa efectiva se expresa en $s^{-1}$.
 
 ### 6.3. Dependencia de fuerza tipo Bell
 
 La implementación usa una forma fenomenológica:
 
-\[
+$$
 k(F)=k_0\exp\left(
 -\frac{s\,\theta F\delta}{k_B T}
 \right),
-\]
+$$
 
-donde `force_direction` determina el signo de la sensibilidad, `load_fraction` representa la fracción efectiva de carga, \(F\) es la fuerza en newtons y \(\delta\) es la distancia característica en metros. Esta relación es una aproximación; no es una ley universal para todas las transiciones.
+donde `force_direction` determina el signo de la sensibilidad, `load_fraction` representa la fracción efectiva de carga, $F$ es la fuerza en newtons y $\delta$ es la distancia característica en metros. Esta relación es una aproximación; no es una ley universal para todas las transiciones.
 
 ### 6.4. Algoritmo directo de Gillespie
 
-Para un estado actual se evalúan las tasas de las transiciones salientes \(a_1,\ldots,a_M\) y se calcula:
+Para un estado actual se evalúan las tasas de las transiciones salientes $a_1,\ldots,a_M$ y se calcula:
 
-\[
+$$
 a_0=\sum_{\mu=1}^{M}a_\mu.
-\]
+$$
 
 El tiempo de espera se obtiene mediante:
 
-\[
+$$
 \tau=-\frac{\ln r_1}{a_0},
-\]
+$$
 
-y se selecciona el evento \(\mu\) según las probabilidades \(a_\mu/a_0\). Después de cada evento, se actualiza el estado, la posición y el consumo de ATP, y se vuelven a evaluar las tasas.
+y se selecciona el evento $\mu$ según las probabilidades $a_\mu/a_0$. Después de cada evento, se actualiza el estado, la posición y el consumo de ATP, y se vuelven a evaluar las tasas.
 
 El algoritmo implementado supone que las tasas se mantienen constantes entre dos eventos para el estado y el ambiente actuales. No integra simultáneamente coordenadas mecánicas continuas.
 
@@ -493,18 +574,18 @@ El algoritmo implementado supone que las tasas se mantienen constantes entre dos
 
 La clase `EnergyLandscape` representa un potencial fenomenológico bidimensional:
 
-\[
+$$
 U=U(x,q),
-\]
+$$
 
-donde \(x\) es la coordenada longitudinal en nm y \(q\in[0,1]\) es una coordenada conformacional adimensional. El resultado se expresa en unidades de \(k_BT\).
+donde $x$ es la coordenada longitudinal en nm y $q\in[0,1]$ es una coordenada conformacional adimensional. El resultado se expresa en unidades de $k_BT$.
 
 La implementación suma cinco contribuciones:
 
-\[
+$$
 \frac{U(x,q)}{k_BT}=
-U_{espacial}+U_{conformacional}+U_{sesgo}+U_{acoplamiento}+U_{carga}.
-\]
+U_{\text{espacial}}+U_{\text{conformacional}}+U_{\text{sesgo}}+U_{\text{acoplamiento}}+U_{\text{carga}}.
+$$
 
 - **Espacial:** potencial periódico cuya fase puede desplazarse con `q`.
 - **Conformacional:** barrera de doble pozo entre los extremos de `q`.
@@ -516,7 +597,7 @@ La energía térmica se convierte entre joules y pN·nm para mantener coherencia
 
 ### 6.6. Otra formulación conformacional
 
-El módulo `visualization.energy_landscape` contiene una segunda formulación independiente con coordenada \(q\in[-1,1]\), donde \(q=-1\) representa visualmente una conformación no acoplada y \(q=+1\) una conformación acoplada. Esta convención no es la misma que la coordenada \([0,1]\) de `EnergyLandscape`. No se deben mezclar sin convertir los valores explícitamente.
+El módulo `visualization.energy_landscape` contiene una segunda formulación independiente con coordenada $q\in[-1,1]$, donde $q=-1$ representa visualmente una conformación no acoplada y $q=+1$ una conformación acoplada. Esta convención no es la misma que la coordenada $[0,1]$ de `EnergyLandscape`. No se deben mezclar sin convertir los valores explícitamente.
 
 ---
 
@@ -1072,16 +1153,21 @@ jupyter lab
 Abre la carpeta `notebooks/` desde el explorador de JupyterLab y selecciona el kernel **Python (ProteinMotorSim)**. Si el kernel aún no está registrado, ejecuta una vez:
 
 ```bash
-python -m pip install jupyterlab ipykernel
 python -m ipykernel install --user \
     --name proteinmotorsim \
     --display-name "Python (ProteinMotorSim)"
 ```
 
-Los notebooks están diseñados para trabajar con el paquete instalado en modo editable desde la raíz del repositorio:
+Los notebooks están diseñados para trabajar con el paquete instalado desde la raíz del repositorio. Para instalar todas las dependencias interactivas y de desarrollo:
 
 ```bash
-python -m pip install -e ".[dev,viz]"
+python -m pip install -e ".[dev,notebooks]"
+```
+
+También puedes instalar el entorno interactivo usando `requirements.txt`, que instala el proyecto en modo editable con el extra `notebooks`:
+
+```bash
+python -m pip install -r requirements.txt
 ```
 
 Los fragmentos de código incluidos en las secciones de esta documentación son ejemplos de uso de la API; no implican que exista una carpeta independiente `examples/`.
@@ -1113,9 +1199,9 @@ Las unidades deben mantenerse explícitas al definir parámetros o comparar resu
 
 En `Environment.external_force_N`, una fuerza positiva se interpreta como una carga opuesta al movimiento hacia +x. En los paisajes energéticos, `opposing_force_pN` utiliza la misma convención, pero se expresa en pN. Recuerda convertir unidades al pasar de una representación a otra:
 
-\[
+$$
 1\;\mathrm{pN}=10^{-12}\;\mathrm{N}.
-\]
+$$
 
 ### Coordenadas conformacionales
 
@@ -1245,3 +1331,181 @@ Este proyecto se distribuye bajo la licencia indicada en el archivo [`LICENSE`](
 ## Nota final
 
 ProteinMotorSim pretende evolucionar desde un prototipo didáctico de cinética estocástica hacia una plataforma modular de modelado mecanoquímico de motores proteicos. La prioridad es mantener trazabilidad entre las hipótesis físicas, las ecuaciones, la implementación numérica y las visualizaciones. Una animación atractiva no sustituye la validación del modelo; cada representación debe indicar qué variables se simulan, cuáles se reconstruyen y cuáles son supuestos ilustrativos.
+
+## 15. Docker
+
+El `Dockerfile` construye una imagen que incluye ProteinMotorSim, sus dependencias interactivas y JupyterLab. El contenedor inicia JupyterLab y expone el puerto `8888`. La autenticación por token de Jupyter permanece activada.
+
+### 15.1. Construir la imagen localmente
+
+Ejecuta el comando desde la raíz del proyecto, donde se encuentran `Dockerfile`, `pyproject.toml`, `src/` y `notebooks/`:
+
+```bash
+sudo docker build \
+    --build-arg USER_ID="$(id -u)" \
+    --build-arg GROUP_ID="$(id -g)" \
+    -t protein-motor-sim:0.1.2 .
+```
+
+Los argumentos `USER_ID` y `GROUP_ID` permiten que los archivos creados en carpetas montadas desde Linux tengan, en general, los permisos del usuario anfitrión.
+
+### 15.2. Ejecutar la imagen local
+
+```bash
+mkdir -p results
+
+sudo docker run --rm -it \
+    -p 8888:8888 \
+    --name proteinmotorsim \
+    --mount type=bind,source="$(pwd)/notebooks",target=/workspace/notebooks \
+    --mount type=bind,source="$(pwd)/results",target=/workspace/results \
+    protein-motor-sim:0.1.2
+```
+
+Abre `http://localhost:8888` y utiliza la URL con token que JupyterLab imprime en la terminal. Los notebooks y resultados se conservan en el anfitrión por medio de los montajes. Para detener el contenedor, pulsa `Ctrl+C`.
+
+Si el contenedor se ejecuta en segundo plano o necesitas consultar el token después, puedes revisar sus registros con:
+
+```bash
+sudo docker logs proteinmotorsim
+```
+
+No desactives la autenticación si expones el puerto fuera de tu equipo.
+
+### 15.3. Descargar una imagen publicada en Docker Hub
+
+Una vez publicada la imagen, cualquier usuario puede descargarla. Sustituye `tu_usuario` por el usuario u organización que mantiene el repositorio:
+
+```bash
+DOCKERHUB_USER="tu_usuario"
+sudo docker pull "$DOCKERHUB_USER/protein-motor-sim:0.1.2"
+
+sudo docker run --rm -it \
+    -p 8888:8888 \
+    "$DOCKERHUB_USER/protein-motor-sim:0.1.2"
+```
+
+### 15.4. Publicar en Docker Hub
+
+Crea previamente un repositorio público o privado llamado `protein-motor-sim` en [Docker Hub](https://hub.docker.com/). Después autentícate y etiqueta la imagen local:
+
+```bash
+DOCKERHUB_USER="tu_usuario"
+
+sudo docker login -u "$DOCKERHUB_USER"
+sudo docker tag protein-motor-sim:0.1.2 \
+    "$DOCKERHUB_USER/protein-motor-sim:0.1.2"
+sudo docker push "$DOCKERHUB_USER/protein-motor-sim:0.1.2"
+```
+
+Opcionalmente, publica también la etiqueta `latest`:
+
+```bash
+sudo docker tag protein-motor-sim:0.1.2 \
+    "$DOCKERHUB_USER/protein-motor-sim:latest"
+sudo docker push "$DOCKERHUB_USER/protein-motor-sim:latest"
+```
+
+Utiliza un Personal Access Token de Docker Hub cuando el comando `docker login` solicite la contraseña. No incluyas contraseñas ni tokens en el Dockerfile, el repositorio Git o los notebooks.
+
+## 16. Publicación e instalación desde PyPI
+
+La configuración de distribución se define en `pyproject.toml`. El nombre de distribución es `protein-motor-sim`, mientras que el nombre de importación en Python es `protein_motor_sim`.
+
+### 16.1. Instalar desde PyPI
+
+Cuando la versión esté publicada, la instalación básica se realiza con:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install "protein-motor-sim==0.1.2"
+```
+
+Para instalar Matplotlib, JupyterLab e IPykernel junto con la librería:
+
+```bash
+python -m pip install "protein-motor-sim[notebooks]==0.1.2"
+```
+
+También se pueden instalar los extras `viz`, `science` y `dev`, o combinarlos. Consulta la tabla de extras de la sección [Instalación](#4-instalación).
+
+### 16.2. Construir las distribuciones
+
+Instala las herramientas de empaquetado:
+
+```bash
+python -m pip install --upgrade build twine
+```
+
+Desde la raíz del proyecto, elimina artefactos anteriores y construye el wheel y la distribución fuente:
+
+```bash
+rm -rf build dist src/*.egg-info
+python -m build
+python -m twine check dist/*
+```
+
+El directorio `dist/` debe contener un archivo `.whl` y un archivo `.tar.gz`.
+
+### 16.3. Probar primero en TestPyPI
+
+Se recomienda validar la instalación antes de publicar en el índice público.
+
+1. Crea una cuenta en [TestPyPI](https://test.pypi.org/account/register/).
+2. Genera un API token desde [la configuración de TestPyPI](https://test.pypi.org/manage/account/#api-tokens).
+3. Sube las distribuciones:
+
+```bash
+python -m twine upload --repository testpypi dist/*
+```
+
+Cuando Twine solicite las credenciales, utiliza `__token__` como usuario y pega el token completo como contraseña. Las cuentas y los tokens de TestPyPI y PyPI son independientes.
+
+Prueba la instalación en un entorno virtual limpio:
+
+```bash
+python3 -m venv /tmp/pms-test
+source /tmp/pms-test/bin/activate
+python -m pip install --upgrade pip
+python -m pip install \
+    --index-url https://test.pypi.org/simple/ \
+    --extra-index-url https://pypi.org/simple/ \
+    "protein-motor-sim[notebooks]==0.1.2"
+```
+
+El índice adicional de PyPI permite resolver dependencias que no estén alojadas en TestPyPI. Comprueba la importación:
+
+```bash
+python -c "from protein_motor_sim import Kinesin1, Environment, GillespieSimulator; print('Importación correcta')"
+```
+
+### 16.4. Publicar en PyPI
+
+Cuando la instalación desde TestPyPI haya sido comprobada:
+
+1. Crea o utiliza una cuenta en [PyPI](https://pypi.org/account/register/).
+2. Configura un API token desde [la configuración de PyPI](https://pypi.org/manage/account/#api-tokens).
+3. Publica las distribuciones:
+
+```bash
+python -m twine upload dist/*
+```
+
+Utiliza `__token__` como usuario y el API token de PyPI como contraseña cuando Twine lo solicite. Después, verifica la instalación desde el índice público:
+
+```bash
+python -m pip install "protein-motor-sim[notebooks]==0.1.2"
+```
+
+### 16.5. Reglas para publicar nuevas versiones
+
+PyPI no permite reemplazar un archivo ya publicado con el mismo nombre y versión. Para cada publicación nueva:
+
+1. Incrementa `version` en `pyproject.toml`.
+2. Actualiza `__version__` en `src/protein_motor_sim/__init__.py`.
+3. Añade los cambios a `CHANGELOG.md`.
+4. Elimina los artefactos anteriores y vuelve a construir `dist/` desde una carpeta limpia.
+5. Comprueba las distribuciones con `twine check` y, preferiblemente, prueba la instalación en TestPyPI.
+
+Nunca escribas API tokens en el código, `pyproject.toml`, `requirements.txt`, notebooks ni Git. Para una publicación automatizada futura, se recomienda configurar Trusted Publishing con GitHub Actions y OIDC.
+

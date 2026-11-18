@@ -1,0 +1,3 @@
+# Entorno interactivo de ProteinMotorSim: instala el paquete editable,
+# Matplotlib, JupyterLab e IPykernel mediante el extra definido en pyproject.toml.
+-e .[notebooks]
