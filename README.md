@@ -194,23 +194,20 @@ ProteinMotorSim/
 │           └── serialization.py
 │
 ├── notebooks/
-│   ├── 01_...ipynb
-│   ├── ...
-│   └── 24_...ipynb
+│   ├── 01_fundamentos_y_simulacion.ipynb
+│   ├── 02_experimentos_atp_y_fuerza.ipynb
+│   ├── 03_estadistica_tiempos_y_reproducibilidad.ipynb
+│   ├── 04_mecanica_y_paisajes_de_energia.ipynb
+│   ├── 05_animaciones_y_trayectorias_energeticas.ipynb
+│   └── 06_mecanica_datos_y_reproducibilidad.ipynb
 │
-├── tests/
-│   ├── test_core.py
-│   ├── test_kinetics.py
-│   ├── test_gillespie.py
-│   ├── test_kinesin.py
-│   ├── test_mechanics.py
-│   └── test_energy_landscape.py
-│
-└── examples/
-    ├── 01_basic_kinesin.py
-    ├── 02_atp_concentration.py
-    ├── 03_external_force.py
-    └── 04_motor_animation.py
+└── tests/
+    ├── test_core.py
+    ├── test_kinetics.py
+    ├── test_gillespie.py
+    ├── test_kinesin.py
+    ├── test_mechanics.py
+    └── test_energy_landscape.py
 ```
 
 ### Responsabilidad de cada paquete
@@ -227,6 +224,8 @@ ProteinMotorSim/
 | `io` | Guardado y recuperación de trayectorias. |
 | `notebooks` | Laboratorio interactivo para experimentos y análisis. |
 | `tests` | Pruebas automatizadas del comportamiento del software. |
+
+La carpeta `notebooks/` concentra los ejemplos ejecutables y los experimentos interactivos. No se mantiene una carpeta `examples/` independiente.
 
 ### Principio de diseño
 
@@ -1050,34 +1049,16 @@ restored = load_trajectory("results/run_001.json")
 
 ## 8. Notebooks de Jupyter
 
-Los notebooks son el laboratorio interactivo recomendado para explorar el simulador. Los primeros catorce desarrollan el uso general y el análisis de simulaciones. Los notebooks 15–24 se enfocan en animaciones y energía.
+Los notebooks son el entorno principal de experimentación, demostración y análisis de ProteinMotorSim. La carpeta `examples/` ya no forma parte de la estructura del proyecto: los ejemplos de uso y los experimentos se mantienen en seis notebooks integrados, organizados de forma progresiva para evitar duplicación de código y contenido.
 
 | N.º | Archivo | Contenido |
 |---:|---|---|
-| 01 | `01_simulacion_basica.ipynb` | Primera simulación de kinesina-1. |
-| 02 | `02_explorar_red_cinetica.ipynb` | Estados, transiciones y tasas de la red. |
-| 03 | `03_inspeccion_trayectoria_eventos.ipynb` | Inspección de eventos, estados y posiciones. |
-| 04 | `04_dependencia_concentracion_atp.ipynb` | Barrido de concentración de ATP. |
-| 05 | `05_dependencia_fuerza_externa.ipynb` | Efecto de la carga externa. |
-| 06 | `06_ensamble_estadistico.ipynb` | Comparación de realizaciones independientes. |
-| 07 | `07_tiempos_espera.ipynb` | Tiempos de espera y distribución exponencial. |
-| 08 | `08_consumo_atp_acoplamiento.ipynb` | Contabilización de hidrólisis y eventos mecánicos. |
-| 09 | `09_mecanica_auxiliar.ipynb` | Resortes, fuerzas y desplazamiento browniano. |
-| 10 | `10_geometria_microtubulo.ipynb` | Índices de sitio, espaciamiento y polaridad. |
-| 11 | `11_guardar_cargar_resultados.ipynb` | Serialización de trayectorias. |
-| 12 | `12_animacion_trayectoria.ipynb` | Animación esquemática de una trayectoria. |
-| 13 | `13_sensibilidad_parametros.ipynb` | Variación de parámetros del modelo. |
-| 14 | `14_reproducibilidad_semillas.ipynb` | Semillas aleatorias y reproducibilidad. |
-| 15 | `15_animacion_kinesina_esquematica.ipynb` | Animación detallada de dos cabezas esquemáticas. |
-| 16 | `16_mapa_energia_2d.ipynb` | Mapa de contornos de energía. |
-| 17 | `17_superficie_energia_3d.ipynb` | Superficie energética tridimensional. |
-| 18 | `18_perfiles_energia_y_fuerza.ipynb` | Perfiles energéticos bajo distintas cargas. |
-| 19 | `19_trayectoria_sobre_paisaje_energia.ipynb` | Superposición de trayectoria sobre paisaje energético. |
-| 20 | `20_animacion_trayectoria_sobre_mapa_energia.ipynb` | Animación de una trayectoria sobre el mapa. |
-| 21 | `21_explorar_parametros_del_paisaje.ipynb` | Sensibilidad a parámetros del paisaje. |
-| 22 | `22_diagrama_energias_estados_y_barreras.ipynb` | Diagrama de energías y barreras discretas. |
-| 23 | `23_mapa_conformacional_acoplamiento.ipynb` | Coordenada conformacional y acoplamiento. |
-| 24 | `24_exportar_animaciones.ipynb` | Exportación de animaciones GIF/MP4. |
+| 01 | `01_fundamentos_y_simulacion.ipynb` | Introducción a la librería, construcción de una kinesina-1, inspección de la red cinética, ejecución con Gillespie, eventos y observables básicos. |
+| 02 | `02_experimentos_atp_y_fuerza.ipynb` | Experimentos computacionales variando la concentración de ATP y la fuerza externa; comparación de tasas y respuesta mecánica del modelo. |
+| 03 | `03_estadistica_tiempos_y_reproducibilidad.ipynb` | Simulaciones de conjunto, distribuciones de tiempos de espera, estadísticas de trayectorias y control de semillas aleatorias. |
+| 04 | `04_mecanica_y_paisajes_de_energia.ipynb` | Fuerzas, resortes, movimiento browniano como componente auxiliar, mapas energéticos 2D, superficies 3D y perfiles de energía. |
+| 05 | `05_animaciones_y_trayectorias_energeticas.ipynb` | Animación esquemática de la marcha de kinesina, visualización de trayectorias sobre paisajes energéticos y exportación de animaciones. |
+| 06 | `06_mecanica_datos_y_reproducibilidad.ipynb` | Geometría de la pista molecular, modelo de carga y arrastre, guardado y recuperación de trayectorias y experimentos reproducibles. |
 
 ### Abrir JupyterLab
 
@@ -1088,7 +1069,22 @@ source .venv/bin/activate
 jupyter lab
 ```
 
-Los notebooks esperan que el paquete esté instalado en modo editable (`pip install -e .`) o que se ejecute Jupyter desde un entorno donde `protein_motor_sim` sea importable.
+Abre la carpeta `notebooks/` desde el explorador de JupyterLab y selecciona el kernel **Python (ProteinMotorSim)**. Si el kernel aún no está registrado, ejecuta una vez:
+
+```bash
+python -m pip install jupyterlab ipykernel
+python -m ipykernel install --user \
+    --name proteinmotorsim \
+    --display-name "Python (ProteinMotorSim)"
+```
+
+Los notebooks están diseñados para trabajar con el paquete instalado en modo editable desde la raíz del repositorio:
+
+```bash
+python -m pip install -e ".[dev,viz]"
+```
+
+Los fragmentos de código incluidos en las secciones de esta documentación son ejemplos de uso de la API; no implican que exista una carpeta independiente `examples/`.
 
 ---
 
