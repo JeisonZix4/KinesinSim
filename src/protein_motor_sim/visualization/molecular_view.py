@@ -1,6 +1,5 @@
 """Esquema 2D conceptual de kinesina y microtúbulo."""
 
-
 def plot_kinesin_schematic(position_nm: float = 0.0, ax=None):
     """Dibuja un esquema conceptual de un motor sobre un microtúbulo.
 

@@ -26,7 +26,4 @@ class SimulationStrategy(ABC):
             environment: Condiciones experimentales.
             t_max: Tiempo máximo de simulación en segundos.
             seed: Semilla opcional para reproducibilidad.
-
-        Returns:
-            Trayectoria resultante de la simulación.
         """

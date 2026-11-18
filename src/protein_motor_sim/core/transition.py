@@ -60,7 +60,7 @@ class Transition:
         if isinstance(self.atp_consumed, bool) or not isinstance(
             self.atp_consumed, int
         ):
-            raise ValueError("El consumo de ATP debe ser un número entero.")
+            raise ValueError("atp_consumed debe ser un número entero.")
         if self.atp_consumed < 0:
             raise ValueError("El consumo de ATP no puede ser negativo.")
 
@@ -83,4 +83,3 @@ class Transition:
                 f"se recibió {value!r}."
             )
         return value
-
