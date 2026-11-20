@@ -1,9 +1,3 @@
-# Python bytecode and caches
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.ruff_cache/
-
 # Virtual environments
 .venv/
 venv/
@@ -17,3 +11,17 @@ dist/
 *.json
 *.mp4
 *.gif
+.venv-publish/
+
+# Pytest
+.pytest_cache/
+.pytest/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Otras cachés
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
