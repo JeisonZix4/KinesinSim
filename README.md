@@ -116,7 +116,7 @@ docker build -t kinesim:0.1.2 .
 
 ## Documentación completa
 
-La documentación técnica se genera con **Sphinx** e incluye:
+La documentación técnica se genera con **Sphinx** y **nbsphinx**. Además de la teoría y la referencia de la API, la web renderiza los seis notebooks como laboratorios guiados. Los notebooks originales se mantienen en `notebooks/`; Sphinx los sincroniza automáticamente al árbol de documentación y no los ejecuta durante el build. La documentación incluye:
 
 - Fundamentos físicos y matemáticos del modelo.
 - Hipótesis, unidades y limitaciones científicas.

@@ -3,3 +3,6 @@ build>=1.2
 twine>=5.0
 pytest>=7.4
 ruff>=0.4
+sphinx>=7.2
+furo>=2024.1.29
+nbsphinx>=0.9.8

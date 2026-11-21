@@ -3,15 +3,15 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "protein-motor-sim"
+name = "KineSIM"
 version = "0.1.2"
-description = "Modular stochastic simulation tools for molecular protein motors"
+description = "A modular Python library for stochastic and mechanochemical simulation of kinesin motors"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
-    { name = "ProteinMotorSim contributors" },
+    { name = "KineSIM contributors" },
 ]
 keywords = [
     "protein motors",
@@ -42,6 +42,8 @@ viz = [
 ]
 notebooks = [
     "matplotlib>=3.7",
+    "pandas>=2.0",
+    "pillow>=9.0",
     "jupyterlab>=4.0",
     "ipykernel>=6.0",
 ]
@@ -53,6 +55,11 @@ dev = [
     "ruff>=0.4",
     "build>=1.2",
     "twine>=5.0",
+]
+docs = [
+    "sphinx>=7.2",
+    "furo>=2024.1.29",
+    "nbsphinx>=0.9.8",
 ]
 
 [tool.setuptools]

@@ -1,4 +1,4 @@
-# Entorno reproducible para ejecutar ProteinMotorSim y sus notebooks en JupyterLab.
+# Entorno reproducible para ejecutar KineSIM y sus notebooks en JupyterLab.
 FROM python:3.11-slim
 
 ARG USER_ID=1000

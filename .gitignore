@@ -1,3 +1,9 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
 # Virtual environments
 .venv/
 venv/
@@ -13,15 +19,13 @@ dist/
 *.gif
 .venv-publish/
 
-# Pytest
-.pytest_cache/
-.pytest/
+# Sphinx generated documentation
+docs/build/
 
-# Python
-__pycache__/
-*.py[cod]
+# Sphinx copies canonical notebooks here during a documentation build
+docs/source/tutoriales/*.ipynb
 
-# Otras cachés
-.ruff_cache/
-.mypy_cache/
-.ipynb_checkpoints/
+# Local notebook outputs
+kinesim_results/
+results/
+outputs/

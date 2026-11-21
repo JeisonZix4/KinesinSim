@@ -1,3 +1,4 @@
-# Entorno interactivo de ProteinMotorSim: instala el paquete editable,
-# Matplotlib, JupyterLab e IPykernel mediante el extra definido en pyproject.toml.
+# Entorno local de Jupyter para desarrollo desde el repositorio.
+# Para reproducir los notebooks como usuario final, instala desde PyPI:
+# python -m pip install "kinesim[notebooks]==0.1.2"
 -e .[notebooks]

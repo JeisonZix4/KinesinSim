@@ -20,7 +20,7 @@ def plot_trajectory(trajectory: Trajectory, ax=None):
         import matplotlib.pyplot as plt
     except ImportError as exc:
         raise ImportError(
-            "Instala Matplotlib con `pip install protein-motor-sim[viz]`."
+            "Instala Matplotlib con `pip install kinesim[viz]`."
         ) from exc
 
     if ax is None:
